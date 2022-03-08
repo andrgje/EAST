@@ -11,7 +11,7 @@ then
 fi
 
 # Docker image name for this project
-DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME:-andreas/east}"
+DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME:-andrgje/east}"
 
 # Path to where in the docker container the project root will be mounted
 export DOCKER_WORKSPACE_PATH="${DOCKER_WORKSPACE_PATH:-/workspace}"
@@ -19,9 +19,6 @@ export DOCKER_WORKSPACE_PATH="${DOCKER_WORKSPACE_PATH:-/workspace}"
 # Docker user id and group id
 export DOCKER_UID=`id -u`
 export DOCKER_GID=`id -g`
-
-# Path to where in the docker container the project root will be mounted
-export DOCKER_WORKSPACE_PATH="${DOCKER_WORKSPACE_PATH:-/workspace}"
 
 while [[ $# -gt 0 ]]
 do
@@ -74,7 +71,7 @@ fi
 
 
 set -x
-docker build --rm --build-arg DOCKER_WORKSPACE_PATH --build-arg DOCKER_UID --build-arg DOCKER_GID -t $DOCKER_IMAGE_NAME $PROJECT_ROOT
+docker build --target dev --rm --build-arg DOCKER_WORKSPACE_PATH --build-arg DOCKER_UID --build-arg DOCKER_GID -t $DOCKER_IMAGE_NAME $PROJECT_ROOT
 docker run --rm -it \
   --name $CONTAINER_NAME \
   -v $PROJECT_ROOT:$DOCKER_WORKSPACE_PATH \

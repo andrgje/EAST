@@ -1,4 +1,4 @@
-FROM python:3.6.13
+FROM python:3.6.13 AS dev
 
 ARG DOCKER_UID
 ARG DOCKER_GID
@@ -16,4 +16,6 @@ RUN pip install -r requirements.txt
 
 USER $DOCKER_UID:$DOCKER_GID
 
-CMD ["python", "train.py", "--data", "/path/at/ai/sweden/", "--chackpoint-dir", "/another/path/at/ai/sweden"]
+# -- stage for job export (e.g. include code as well) 
+FROM dev AS job
+COPY . .

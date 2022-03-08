@@ -1,5 +1,5 @@
 {
-	"name": "andreas/east",
+	"name": "andrgje/east",
 	"build": {
 		"context": "..",
 		"dockerfile": "../Dockerfile",
@@ -13,5 +13,5 @@
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
 	"workspaceFolder": "/workspace",
     "remoteUser": "docker-user",
-	"mounts": ["source=andreas-east-home,target=/home/docker-user,type=volume"]
+	"mounts": ["source=andrgje-east-home,target=/home/docker-user,type=volume"]
 }

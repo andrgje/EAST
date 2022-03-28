@@ -16,6 +16,7 @@ from data_util import GeneratorEnqueuer
 
 tf.app.flags.DEFINE_string('training_data_path', '/data/ocr/icdar2015/',
                            'training dataset to use')
+tf.app.flags.DEFINE_string('validation_data_path', '', 'validation dataset to use')
 tf.app.flags.DEFINE_integer('max_image_large_side', 1280,
                             'max image size of training')
 tf.app.flags.DEFINE_integer('max_text_size', 800,
@@ -33,11 +34,15 @@ tf.app.flags.DEFINE_string('geometry', 'RBOX',
 FLAGS = tf.app.flags.FLAGS
 
 
-def get_images():
+def get_images(train):
+    if train:
+        path=FLAGS.training_data_path
+    else:
+        path = FLAGS.validation_data_path
     files = []
     for ext in ['jpg', 'png', 'jpeg', 'JPG']:
         files.extend(glob.glob(
-            os.path.join(FLAGS.training_data_path, '*.{}'.format(ext))))
+            os.path.join(path, '*.{}'.format(ext))))
     return files
 
 
@@ -583,8 +588,9 @@ def generate_rbox(im_size, polys, tags):
 def generator(input_size=512, batch_size=32,
               background_ratio=3./8,
               random_scale=np.array([0.5, 1, 2.0, 3.0]),
-              vis=False):
-    image_list = np.array(get_images())
+              vis=False,
+              train=True):
+    image_list = np.array(get_images(train))
     print('{} training images in {}'.format(
         image_list.shape[0], FLAGS.training_data_path))
     index = np.arange(0, image_list.shape[0])

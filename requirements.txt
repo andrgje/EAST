@@ -1,9 +1,9 @@
-tensorflow==1.9.0
+opencv-python-headless==3.4.2.17
 Shapely==1.5.13
 Flask==0.10.1
 matplotlib==1.5.1
 scipy==0.19.0
 plumbum==1.6.2
-numpy==1.14.2
+numpy==1.18.5
 ipython==6.1.0
 Pillow==4.2.1

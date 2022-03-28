@@ -1,4 +1,4 @@
-FROM python:3.6.13 AS dev
+FROM tensorflow/tensorflow:1.9.0-gpu-py3 AS dev
 
 ARG DOCKER_UID
 ARG DOCKER_GID

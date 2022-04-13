@@ -15,6 +15,8 @@ tf.app.flags.DEFINE_boolean('restore', False, 'whether to restore from checkpoin
 tf.app.flags.DEFINE_integer('save_checkpoint_steps', 1000, '')
 tf.app.flags.DEFINE_integer('save_summary_steps', 100, '')
 tf.app.flags.DEFINE_string('pretrained_model_path', None, '')
+tf.app.flags.DEFINE_integer('steps_per_epoch_train', 100, '')
+tf.app.flags.DEFINE_integer('steps_per_epoch_val', 100, '')
 
 import model
 import icdar
@@ -148,11 +150,14 @@ def main(argv=None):
         data_generator = icdar.get_batch(num_workers=FLAGS.num_readers,
                                          **kwargs)
 
-        """data_generator_val = icdar.get_batch(num_workers=FLAGS.num_readers,
+        data_generator_val = icdar.get_batch(num_workers=FLAGS.num_readers,
                                          input_size=FLAGS.input_size,
                                          batch_size=len(gpus),
                                          train=False)
-        """
+
+        avg_val_loss_best = 0
+        best_val_count = 0
+
         start = time.time()
         for step in range(FLAGS.max_steps):
             data = next(data_generator)
@@ -179,8 +184,27 @@ def main(argv=None):
                                                                                              input_score_maps: data[2],
                                                                                              input_geo_maps: data[3],
                                                                                              input_training_masks: data[4]})
+
+
                 summary_writer.add_summary(summary_str, global_step=step)
+            if step % FLAGS.steps_per_epoch_train == 0:
+                loss=0
+                for val_step in range(FLAGS.steps_per_epoch_val):
+                    val_data=next(data_generator_val)
+                    tl = sess.run([model_loss], feed_dict={input_images: val_data[0],input_score_maps: val_data[2], input_geo_maps: val_data[3], input_training_masks: val_data[4]})
+                    loss+=tl
 
+                    avg__val_loss = loss/FLAGS.steps_per_epoch_train
+            
+            if avg_val_loss< avg_val_loss_best:
+                avg_val_loss_best = avg_val_loss
+                saver.save(sess, FLAGS.checkpoint_path + 'best_val.ckpt', global_step=global_step)
+                best_val_count=0
+                
+            best_val_count+=1
 
+            if best_val_count>5:
+                print("Quit: Validation loss not decreased in 5 epochs")
+                quit()
 if __name__ == '__main__':
     tf.app.run()

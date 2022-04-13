@@ -187,6 +187,8 @@ def main(argv=None):
 
 
                 summary_writer.add_summary(summary_str, global_step=step)
+            avg_val_loss=0
+            avg_val_loss_best=0
             if step % FLAGS.steps_per_epoch_train == 0 & step>0:
                 loss=0
                 for val_step in range(FLAGS.steps_per_epoch_val):

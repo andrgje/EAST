@@ -198,15 +198,15 @@ def main(argv=None):
 
                     avg_val_loss = loss/FLAGS.steps_per_epoch_train
             
-            if avg_val_loss< avg_val_loss_best:
-                avg_val_loss_best = avg_val_loss
-                saver.save(sess, FLAGS.checkpoint_path + 'best_val.ckpt', global_step=global_step)
-                best_val_count=0
-                
-            best_val_count+=1
+                if avg_val_loss< avg_val_loss_best:
+                    avg_val_loss_best = avg_val_loss
+                    saver.save(sess, FLAGS.checkpoint_path + 'best_val.ckpt', global_step=global_step)
+                    best_val_count=0
+                    
+                best_val_count+=1
 
-            if best_val_count>5:
-                print("Quit: Validation loss not decreased in 5 epochs")
-                quit()
+                if best_val_count>5 & step>1000:
+                    print("Quit: Validation loss not decreased in 5 epochs")
+                    quit()
 if __name__ == '__main__':
     tf.app.run()

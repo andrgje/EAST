@@ -194,7 +194,7 @@ def main(argv=None):
                     tl = sess.run([model_loss], feed_dict={input_images: val_data[0],input_score_maps: val_data[2], input_geo_maps: val_data[3], input_training_masks: val_data[4]})
                     loss+=tl
 
-                    avg__val_loss = loss/FLAGS.steps_per_epoch_train
+                    avg_val_loss = loss/FLAGS.steps_per_epoch_train
             
             if avg_val_loss< avg_val_loss_best:
                 avg_val_loss_best = avg_val_loss

@@ -14,6 +14,8 @@ WORKDIR $DOCKER_WORKSPACE_PATH
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+RUN pip install gdown
+
 USER $DOCKER_UID:$DOCKER_GID
 
 # -- stage for job export (e.g. include code as well) 

@@ -187,12 +187,12 @@ def main(argv=None):
 
 
                 summary_writer.add_summary(summary_str, global_step=step)
-            if step % FLAGS.steps_per_epoch_train == 0:
+            if step % FLAGS.steps_per_epoch_train == 0 & step>0:
                 loss=0
                 for val_step in range(FLAGS.steps_per_epoch_val):
                     val_data=next(data_generator_val)
-                    tl = sess.run([model_loss], feed_dict={input_images: val_data[0],input_score_maps: val_data[2], input_geo_maps: val_data[3], input_training_masks: val_data[4]})
-                    loss+=tl
+                    ml = sess.run([model_loss], feed_dict={input_images: val_data[0],input_score_maps: val_data[2], input_geo_maps: val_data[3], input_training_masks: val_data[4]})
+                    loss+=tf.reduce.mean(tl)
 
                     avg_val_loss = loss/FLAGS.steps_per_epoch_train
             

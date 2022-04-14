@@ -1,5 +1,10 @@
 FROM tensorflow/tensorflow:1.9.0-gpu-py3 AS dev
 
+RUN locale-gen en_US.UTF-8  
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8 
+
 ARG DOCKER_UID
 ARG DOCKER_GID
 RUN groupadd -r docker-user -g $DOCKER_GID && useradd -r -u $DOCKER_UID -g $DOCKER_GID -m -s /bin/false -g docker-user docker-user

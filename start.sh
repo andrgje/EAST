@@ -71,8 +71,8 @@ fi
 
 
 set -x
-nvidia-docker build --target dev --rm --build-arg DOCKER_WORKSPACE_PATH --build-arg DOCKER_UID --build-arg DOCKER_GID -t $DOCKER_IMAGE_NAME $PROJECT_ROOT
-nvidia-docker run --rm -it \
+docker build --target dev --rm --build-arg DOCKER_WORKSPACE_PATH --build-arg DOCKER_UID --build-arg DOCKER_GID -t $DOCKER_IMAGE_NAME $PROJECT_ROOT
+docker run --rm -it \
   --name $CONTAINER_NAME \
   -v $PROJECT_ROOT:$DOCKER_WORKSPACE_PATH \
   -v $HOME_VOLUME_NAME:/home/docker-user \

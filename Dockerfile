@@ -1,9 +1,11 @@
 FROM tensorflow/tensorflow:1.9.0-gpu-py3 AS dev
 
-RUN locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8 
+
+
+ENV LANG C.UTF-8 
+ENV LANGUAGE C.UTF-8 
+ENV LC_ALL C.UTF-8
+
 
 ARG DOCKER_UID
 ARG DOCKER_GID

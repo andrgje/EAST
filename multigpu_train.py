@@ -155,7 +155,7 @@ def main(argv=None):
                                          batch_size=len(gpus),
                                          train=False)
 
-        avg_val_loss_best = 0
+        avg_val_loss_best = 100
         best_val_count = 0
 
         start = time.time()
@@ -188,24 +188,23 @@ def main(argv=None):
 
                 summary_writer.add_summary(summary_str, global_step=step)
             avg_val_loss=0
-            avg_val_loss_best=0
-            if step % FLAGS.steps_per_epoch_train == 0 & step>0:
+            if step % FLAGS.steps_per_epoch_train == 0 and step>0:
+                print("Validation in progress")
                 loss=0
                 for val_step in range(FLAGS.steps_per_epoch_val):
                     val_data=next(data_generator_val)
-                    [ml] = sess.run([model_loss], feed_dict={input_images: val_data[0],input_score_maps: val_data[2], input_geo_maps: val_data[3], input_training_masks: val_data[4]})
-                    loss+=tf.reduce.mean(tl)
-
-                    avg_val_loss = loss/FLAGS.steps_per_epoch_train
-            
+                    [ml] = sess.run([total_loss], feed_dict={input_images: val_data[0],input_score_maps: val_data[2], input_geo_maps: val_data[3], input_training_masks: val_data[4]})
+                    loss+=ml
+                    avg_val_loss = loss/FLAGS.steps_per_epoch_val		
+                #print("val loss: %.4f   best_val_loss: %.4f,  val count: %d" %(avg_val_loss, avg_val_loss_best, best_val_count))
                 if avg_val_loss< avg_val_loss_best:
                     avg_val_loss_best = avg_val_loss
                     saver.save(sess, FLAGS.checkpoint_path + 'best_val.ckpt', global_step=global_step)
                     best_val_count=0
                     
                 best_val_count+=1
-
-                if best_val_count>5 & step>1000:
+                print("val loss: %.4f   best_val_loss: %.4f,  val count: %d" %(avg_val_loss, avg_val_loss_best, best_val_count)) 
+                if best_val_count>5:
                     print("Quit: Validation loss not decreased in 5 epochs")
                     quit()
 if __name__ == '__main__':

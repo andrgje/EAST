@@ -68,7 +68,7 @@ def average_gradients(tower_grads):
 
     return average_grads
 
-def validation()
+
 
 
 def main(argv=None):
@@ -196,7 +196,7 @@ def main(argv=None):
                 loss=0
                 for val_step in range(FLAGS.steps_per_epoch_val):
                     val_data=next(data_generator_val)
-                    ml,tl,summary_val= sess.run([total_loss,model_loss], feed_dict={input_images: val_data[0],input_score_maps: val_data[2], input_geo_maps: val_data[3], input_training_masks: val_data[4]})
+                    ml,tl= sess.run([total_loss,model_loss], feed_dict={input_images: val_data[0],input_score_maps: val_data[2], input_geo_maps: val_data[3], input_training_masks: val_data[4]})
                     loss+=ml
                 
                 avg_val_loss = loss/FLAGS.steps_per_epoch_val		
@@ -212,7 +212,7 @@ def main(argv=None):
                     
                 best_val_count+=1
                 print("val loss: %.4f   best_val_loss: %.4f,  val count: %d" %(avg_val_loss, avg_val_loss_best, best_val_count)) 
-                if best_val_count>5:
+                if best_val_count>20:
                     print("Quit: Validation loss not decreased in 5 epochs")
                     quit()
 if __name__ == '__main__':

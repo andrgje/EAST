@@ -69,8 +69,6 @@ def average_gradients(tower_grads):
     return average_grads
 
 
-
-
 def main(argv=None):
     import os
     os.environ['CUDA_VISIBLE_DEVICES'] = FLAGS.gpu_list
@@ -202,7 +200,7 @@ def main(argv=None):
                 avg_val_loss = loss/FLAGS.steps_per_epoch_val		
 
                 loss_placeholder = tf.placeholder(tf.float32, shape=[], name="validation_loss")
-                val_loss_summary_op,val_summary_string = sess.run([tf.summary.scalar("validation_loss", loss_placeholder),summary_op], feed_dict={loss_placeholder: avg_val_loss})
+                _,val_summary_string = sess.run([tf.summary.scalar("validation_loss", loss_placeholder),summary_op], feed_dict={loss_placeholder: avg_val_loss})
                 summary_writer.add_summary(val_summary_string, global_step=step)
                 
                 if avg_val_loss< avg_val_loss_best:

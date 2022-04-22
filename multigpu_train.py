@@ -46,6 +46,7 @@ def tower_loss(images, score_maps, geo_maps, training_masks, reuse_variables=Non
         tf.summary.image('training_masks', training_masks)
         tf.summary.scalar('model_loss', model_loss)
         tf.summary.scalar('total_loss', total_loss)
+        
 
     return total_loss, model_loss
 
@@ -66,6 +67,8 @@ def average_gradients(tower_grads):
         average_grads.append(grad_and_var)
 
     return average_grads
+
+def validation()
 
 
 def main(argv=None):
@@ -193,10 +196,15 @@ def main(argv=None):
                 loss=0
                 for val_step in range(FLAGS.steps_per_epoch_val):
                     val_data=next(data_generator_val)
-                    [ml] = sess.run([total_loss], feed_dict={input_images: val_data[0],input_score_maps: val_data[2], input_geo_maps: val_data[3], input_training_masks: val_data[4]})
+                    ml,tl,summary_val= sess.run([total_loss,model_loss], feed_dict={input_images: val_data[0],input_score_maps: val_data[2], input_geo_maps: val_data[3], input_training_masks: val_data[4]})
                     loss+=ml
-                    avg_val_loss = loss/FLAGS.steps_per_epoch_val		
-                #print("val loss: %.4f   best_val_loss: %.4f,  val count: %d" %(avg_val_loss, avg_val_loss_best, best_val_count))
+                
+                avg_val_loss = loss/FLAGS.steps_per_epoch_val		
+
+                loss_placeholder = tf.placeholder(tf.float32, shape=[], name="validation_loss")
+                val_loss_summary_op = sess.run([tf.summary.scalar("validation_loss", loss_placeholder)], feed_dict={loss_placeholder: avg_val_loss})
+                summary_writer.add_summary(val_loss_summary_op, global_step=step)
+                
                 if avg_val_loss< avg_val_loss_best:
                     avg_val_loss_best = avg_val_loss
                     saver.save(sess, FLAGS.checkpoint_path + 'best_val.ckpt', global_step=global_step)

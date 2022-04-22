@@ -200,8 +200,8 @@ def main(argv=None):
                 avg_val_loss = loss/FLAGS.steps_per_epoch_val		
 
                 loss_placeholder = tf.placeholder(tf.float32, shape=[], name="validation_loss")
-                _,val_summary_string = sess.run([tf.summary.scalar("validation_loss", loss_placeholder),summary_op], feed_dict={loss_placeholder: avg_val_loss})
-                summary_writer.add_summary(val_summary_string, global_step=step)
+                val_summary_op = sess.run([tf.summary.scalar("validation_loss", loss_placeholder)], feed_dict={loss_placeholder: avg_val_loss})
+                summary_writer.add_summary(val_summary_op, global_step=step)
                 
                 if avg_val_loss< avg_val_loss_best:
                     avg_val_loss_best = avg_val_loss

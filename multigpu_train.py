@@ -88,7 +88,7 @@ def main(argv=None):
     input_training_masks = tf.placeholder(tf.float32, shape=[None, None, None, 1], name='input_training_masks')
 
     global_step = tf.get_variable('global_step', [], initializer=tf.constant_initializer(0), trainable=False)
-    learning_rate = tf.train.exponential_decay(FLAGS.learning_rate, global_step, decay_steps=10000, decay_rate=0.94, staircase=True)
+    learning_rate = tf.train.exponential_decay(FLAGS.learning_rate, global_step, decay_steps=5000, decay_rate=0.94, staircase=True)
     # add summary
     tf.summary.scalar('learning_rate', learning_rate)
     opt = tf.train.AdamOptimizer(learning_rate)
@@ -200,7 +200,7 @@ def main(argv=None):
                 avg_val_loss = loss/FLAGS.steps_per_epoch_val		
 
                 loss_placeholder = tf.placeholder(tf.float32, shape=[], name="validation_loss")
-                val_summary_op = sess.run([tf.summary.scalar("validation_loss", loss_placeholder)], feed_dict={loss_placeholder: avg_val_loss})
+                val_summary_op = sess.run(tf.summary.scalar("validation_loss", loss_placeholder), feed_dict={loss_placeholder: avg_val_loss})
                 summary_writer.add_summary(val_summary_op, global_step=step)
                 
                 if avg_val_loss< avg_val_loss_best:
@@ -210,7 +210,7 @@ def main(argv=None):
                     
                 best_val_count+=1
                 print("val loss: %.4f   best_val_loss: %.4f,  val count: %d" %(avg_val_loss, avg_val_loss_best, best_val_count)) 
-                if best_val_count>20:
+                if best_val_count>50:
                     print("Quit: Validation loss not decreased in 5 epochs")
                     quit()
 if __name__ == '__main__':
